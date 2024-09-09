@@ -1,23 +1,20 @@
-import logo from './logo.svg';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="Background">
+      <div className="App">
+        <h1>Hello and Welcome to the Mental Health Chatbot!</h1>
+      </div>
+      <div className="InputField">
+        <TextField id="outlined-basic" label="Say Hi!" variant="outlined" />
+      </div>
+      <div className="Button">
+        <Button variant="contained">Send</Button>
+      </div>
     </div>
   );
 }

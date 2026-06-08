@@ -1,3 +1,6 @@
+// Load .env for local development (Vercel injects env vars automatically in production)
+try { require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }); } catch (_) {}
+
 const Anthropic = require('@anthropic-ai/sdk');
 
 const SYSTEM_PROMPT = `You are MindfulChat, a compassionate and supportive mental health companion. Your role is to provide emotional support, a safe space to express feelings, and practical coping strategies.

@@ -4,76 +4,93 @@ import {
   TextField,
   IconButton,
   Typography,
-  Avatar,
   Chip,
-  Paper,
   Snackbar,
   Alert,
   Tooltip,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import SmsIcon from '@mui/icons-material/Sms';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import './App.css';
 
 const SUGGESTED_PROMPTS = [
   "I've been feeling really anxious lately",
   "I'm struggling to sleep and feel overwhelmed",
-  "I need help managing stress at work",
+  "I need help managing stress",
   "I feel lonely and disconnected",
-  "I want to learn mindfulness techniques",
+  "Teach me a breathing exercise",
 ];
 
 const WELCOME_MESSAGE = {
   id: 'welcome',
   role: 'assistant',
-  content: "Hi, I'm here for you 💙\n\nThis is a safe space where you can talk about anything on your mind — stress, anxiety, relationships, or just how your day went.\n\nI'm not a therapist, but I'm here to listen and support you. How are you feeling today?",
+  content: "Hi, I'm here for you 💙\n\nThis is a safe, judgment-free space where you can talk about anything — stress, anxiety, relationships, or just how your day went.\n\nI'm not a therapist, but I genuinely care and I'm here to listen. How are you feeling today?",
   timestamp: new Date(),
 };
+
+function CrisisBanner() {
+  return (
+    <Box className="crisis-banner">
+      <Box className="crisis-banner-inner">
+        <Box className="crisis-item">
+          <LocalPhoneIcon sx={{ fontSize: 14, mr: 0.5, flexShrink: 0 }} />
+          <Typography variant="caption" sx={{ fontWeight: 600 }}>
+            Call or Text&nbsp;<span className="crisis-number">988</span>
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#c62828', opacity: 0.75, ml: 0.5 }}>
+            Suicide &amp; Crisis Lifeline
+          </Typography>
+        </Box>
+        <Box className="crisis-divider" />
+        <Box className="crisis-item">
+          <SmsIcon sx={{ fontSize: 14, mr: 0.5, flexShrink: 0 }} />
+          <Typography variant="caption" sx={{ fontWeight: 600 }}>
+            Text&nbsp;<span className="crisis-number">HOME</span>&nbsp;to&nbsp;<span className="crisis-number">741741</span>
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#c62828', opacity: 0.75, ml: 0.5 }}>
+            Crisis Text Line
+          </Typography>
+        </Box>
+        <Box className="crisis-divider" />
+        <Box className="crisis-item">
+          <Typography variant="caption" sx={{ color: '#b71c1c', opacity: 0.7 }}>
+            Free · Confidential · 24/7
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 function ChatMessage({ message }) {
   const isUser = message.role === 'user';
 
   return (
     <Box
-      sx={{
-        display: 'flex',
-        justifyContent: isUser ? 'flex-end' : 'flex-start',
-        mb: 2,
-        alignItems: 'flex-end',
-        gap: 1,
-      }}
+      className={`message-row ${isUser ? 'message-user' : 'message-bot'}`}
     >
       {!isUser && (
-        <Avatar sx={{ bgcolor: '#7c4dff', width: 36, height: 36, fontSize: '1rem', flexShrink: 0 }}>
-          💙
-        </Avatar>
+        <Box className="bot-avatar">
+          <span>💙</span>
+        </Box>
       )}
-      <Box sx={{ maxWidth: '72%', display: 'flex', flexDirection: 'column', alignItems: isUser ? 'flex-end' : 'flex-start' }}>
-        <Paper
-          elevation={0}
-          sx={{
-            px: 2,
-            py: 1.5,
-            borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-            bgcolor: isUser ? '#7c4dff' : '#f3f0ff',
-            color: isUser ? 'white' : '#1a1a2e',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-          }}
-        >
-          <Typography variant="body1" sx={{ lineHeight: 1.65, fontSize: '0.95rem' }}>
+      <Box className={`message-content ${isUser ? 'message-content-user' : 'message-content-bot'}`}>
+        <Box className={`bubble ${isUser ? 'bubble-user' : 'bubble-bot'}`}>
+          <Typography sx={{ lineHeight: 1.65, fontSize: '0.94rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
             {message.content}
           </Typography>
-        </Paper>
-        <Typography variant="caption" sx={{ color: '#9e9e9e', mt: 0.5, px: 0.5 }}>
+        </Box>
+        <Typography variant="caption" className="message-time">
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </Typography>
       </Box>
       {isUser && (
-        <Avatar sx={{ bgcolor: '#e8eaf6', color: '#5c35cc', width: 36, height: 36, fontSize: '0.75rem', fontWeight: 700, flexShrink: 0 }}>
-          You
-        </Avatar>
+        <Box className="user-avatar">
+          <Typography sx={{ fontSize: '0.7rem', fontWeight: 700 }}>You</Typography>
+        </Box>
       )}
     </Box>
   );
@@ -81,15 +98,13 @@ function ChatMessage({ message }) {
 
 function TypingIndicator() {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, mb: 2 }}>
-      <Avatar sx={{ bgcolor: '#7c4dff', width: 36, height: 36, fontSize: '1rem' }}>💙</Avatar>
-      <Paper elevation={0} sx={{ px: 2.5, py: 1.5, borderRadius: '18px 18px 18px 4px', bgcolor: '#f3f0ff' }}>
+    <Box className="message-row message-bot">
+      <Box className="bot-avatar"><span>💙</span></Box>
+      <Box className="bubble bubble-bot" sx={{ px: 2.5, py: 1.5 }}>
         <Box className="typing-dots">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span /><span /><span />
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }
@@ -161,36 +176,36 @@ export default function App() {
 
   return (
     <Box className="app-container">
+
+      {/* US Crisis Helpline Banner */}
+      <CrisisBanner />
+
       {/* Header */}
       <Box className="chat-header">
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Avatar sx={{ bgcolor: '#7c4dff', width: 44, height: 44 }}>
-            <FavoriteIcon sx={{ color: 'white', fontSize: 22 }} />
-          </Avatar>
+          <Box className="header-logo">
+            <AutoAwesomeIcon sx={{ fontSize: 20, color: 'white' }} />
+          </Box>
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a1a2e', lineHeight: 1.2, fontSize: '1.1rem' }}>
+            <Typography sx={{ fontWeight: 800, color: '#1a1a2e', lineHeight: 1.2, fontSize: '1.15rem', letterSpacing: '-0.3px' }}>
               MindfulChat
             </Typography>
-            <Typography variant="caption" sx={{ color: '#7c4dff', fontWeight: 500 }}>
-              Your mental wellness companion
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+              <Box className="online-dot" />
+              <Typography variant="caption" sx={{ color: '#7c4dff', fontWeight: 600, fontSize: '0.7rem' }}>
+                Always here for you
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Tooltip title="Clear conversation">
-          <IconButton onClick={clearConversation} size="small" sx={{ color: '#9e9e9e', '&:hover': { color: '#7c4dff' } }}>
-            <DeleteOutlineIcon />
+          <IconButton onClick={clearConversation} size="small" className="clear-btn">
+            <DeleteOutlineIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       </Box>
 
-      {/* Crisis banner */}
-      <Box className="disclaimer-banner">
-        <Typography variant="caption" sx={{ color: '#555', textAlign: 'center', display: 'block' }}>
-          Not a substitute for professional help. In crisis? Call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline, US) · International: <strong>findahelpline.com</strong>
-        </Typography>
-      </Box>
-
-      {/* Messages area */}
+      {/* Messages */}
       <Box className="messages-area">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
@@ -202,8 +217,8 @@ export default function App() {
       {/* Suggested prompts */}
       {showSuggestions && (
         <Box className="suggestions-area">
-          <Typography variant="caption" sx={{ color: '#9e9e9e', mb: 1, display: 'block', fontWeight: 500 }}>
-            Try saying...
+          <Typography variant="caption" className="suggestions-label">
+            What's on your mind?
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
             {SUGGESTED_PROMPTS.map((prompt) => (
@@ -211,22 +226,15 @@ export default function App() {
                 key={prompt}
                 label={prompt}
                 onClick={() => sendMessage(prompt)}
-                variant="outlined"
                 size="small"
-                sx={{
-                  borderColor: '#c5b3ff',
-                  color: '#5c35cc',
-                  cursor: 'pointer',
-                  fontSize: '0.78rem',
-                  '&:hover': { bgcolor: '#f3f0ff', borderColor: '#7c4dff' },
-                }}
+                className="suggestion-chip"
               />
             ))}
           </Box>
         </Box>
       )}
 
-      {/* Input area */}
+      {/* Input */}
       <Box className="input-area">
         <TextField
           inputRef={inputRef}
@@ -239,31 +247,14 @@ export default function App() {
           placeholder="Share what's on your mind… (Enter to send)"
           variant="outlined"
           disabled={loading}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '14px',
-              bgcolor: '#fafafa',
-              '& fieldset': { borderColor: '#e0e0e0' },
-              '&:hover fieldset': { borderColor: '#c5b3ff' },
-              '&.Mui-focused fieldset': { borderColor: '#7c4dff' },
-            },
-          }}
+          className="message-input"
         />
         <IconButton
           onClick={() => sendMessage()}
           disabled={!input.trim() || loading}
-          sx={{
-            bgcolor: '#7c4dff',
-            color: 'white',
-            width: 48,
-            height: 48,
-            ml: 1,
-            flexShrink: 0,
-            '&:hover': { bgcolor: '#651fff' },
-            '&.Mui-disabled': { bgcolor: '#e0e0e0', color: '#bdbdbd' },
-          }}
+          className="send-btn"
         >
-          <SendIcon sx={{ fontSize: 20 }} />
+          <SendIcon sx={{ fontSize: 19 }} />
         </IconButton>
       </Box>
 
@@ -273,7 +264,7 @@ export default function App() {
         onClose={() => setError(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity="error" onClose={() => setError(null)} sx={{ width: '100%' }}>
+        <Alert severity="error" onClose={() => setError(null)}>
           {error}
         </Alert>
       </Snackbar>
